@@ -5,21 +5,24 @@ from flask_login import UserMixin
 
 from sqlalchemy.orm import DeclarativeBase,declarative_base
 from sqlalchemy import Integer,Column,String,ForeignKey
-
+from app import db
 
 Base = declarative_base()
 metadata = Base.metadata
 
-from app import db
+
 
 class Base(DeclarativeBase):
     pass
 
 class Role(db.Model):
+    __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
+    description = db.Column(db.String(255), nullable=False)
 
 class User(db.Model, UserMixin):
+    __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
@@ -28,6 +31,7 @@ class User(db.Model, UserMixin):
     role = db.relationship('Role', backref=db.backref('users', lazy=True))
 
 class Task(db.Model):
+    __tablename__ = 'tasks'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     status = db.Column(db.String(20), nullable=False, default='Pending')
